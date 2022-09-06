@@ -1,0 +1,84 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Data.SqlClient;
+namespace HandsOnAdo_Demo1
+{
+    class Program
+    {
+        public static void GetEmployeeById(int id)
+        {
+            SqlConnection con = new SqlConnection(@"Data Source=LAPTOP-7ERDNUTG\SQLEXPRESS;Initial Catalog=Company;Integrated Security=True");
+            try
+            {
+                
+                con.Open(); 
+
+                SqlCommand cmd = new SqlCommand("Select Emp_no,Emp_fname from Employee where Emp_no=" + id, con);
+                SqlDataReader dr = cmd.ExecuteReader(); //ExecureReader() method stores result set data into DataReader object
+                if (dr.HasRows)
+                {
+                    dr.Read();
+
+
+                    Console.WriteLine("Emp_no:{0} Emp_fname:{1}", dr["Emp_no"], dr["Emp_fname"]);
+                }
+                else
+                    Console.WriteLine("Invalid Id");
+
+
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                con.Close();//close connection i.e disconnected from database
+            }
+        }
+        public static void GetAll() //Get All the Products
+        {
+            SqlConnection con = new SqlConnection(@"Data Source=LAPTOP-7ERDNUTG\SQLEXPRESS;Initial Catalog=Company;Integrated Security=True");
+            try
+            {
+                
+                con.Open(); //open connection
+                SqlCommand cmd = new SqlCommand("Select * from Employee", con);
+              
+                SqlDataReader dr = cmd.ExecuteReader(); //ExecureReader() method stores result set data into DataReader object
+
+                while (dr.Read())
+                {
+
+                    Console.WriteLine("Emp_no:{0} Emp_fname:{1} Emp_lname {2} Dept_no {3}", dr["Emp_no"], dr["Emp_fname"], dr["Emp_lname"], dr["Dept_no"]);
+
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                con.Close();//close connection i.e disconnected from database
+            }
+        }
+        static void Main(string[] args)
+        {
+            GetEmployeeById(10102);
+            //GetAll();
+            Console.ReadKey();
+        }
+    }
+}
